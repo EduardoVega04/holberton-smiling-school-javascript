@@ -1,28 +1,32 @@
 $(document).ready(function() {
-    //Get carousel data
+    //Make carousel dynamic
     $.get("https://smileschool-api.hbtn.info/quotes", function(data) {
-        let carouselPerson1 = $("#carouselExampleControls .carousel-inner .carousel-item .container .row").eq(0);
-        let carouselPerson2 = $("#carouselExampleControls .carousel-inner .carousel-item .container .row").eq(1);
+        let carousel = $("#carouselExampleControls .carousel-inner");
 
-        const contentPerson1 = 
-        `<div class="align-self-center">
-            <img class='rounded-circle img-fluid' width='150' height='150' src='${data[0].pic_url}' alt='profiles picture of testimonial'>
-        </div>
-        <div class="w-100 d-block d-md-none"></div>
-        <div class="col col-md-6 align-self-center text-left pt-4 pt-md-2">
-            <p class="testimonial__text">${data[0].text}</p>
-            <p class="testimonial__name pt-4"><strong>${data[0].name}</strong><br><span class="font-italic">${data[0].title}</span></p>
-        </div>`;
+        $("#carouselExampleControls").removeClass("loader");
 
-        const contentPerson2 = 
-        `<div class="align-self-center">
-            <img class="rounded-circle img-fluid" width="150" height="150" src='${data[1].pic_url}' alt="profiles picture of testimonial">
-        </div>
-        <div class="w-100 d-block d-md-none"></div>
-        <div class="col col-md-6 align-self-center text-left pt-4 pt-md-2">
-            <p class="testimonial__text">${data[1].text}</p>
-            <p class="testimonial__name pt-4"><strong>${data[1].name}</strong><br><span class="font-italic">${data[1].title}</span></p>
-        </div>`;
+        for(let i = 0; i < data.length; i++)
+        {
+            let personCarousel = 
+            `<div class="carousel-item">
+                <div class="container">
+                    <div class="row py-4 d-flex justify-content-center">
+                        <div class="align-self-center">
+                            <img class='rounded-circle img-fluid' width='150' height='150' src='${data[i].pic_url}' alt='profiles picture of testimonial'>
+                        </div>
+                        <div class="w-100 d-block d-md-none"></div>
+                        <div class="col col-md-6 align-self-center text-left pt-4 pt-md-2">
+                            <p class="testimonial__text">${data[i].text}</p>
+                            <p class="testimonial__name pt-4"><strong>${data[i].name}</strong><br><span class="font-italic">${data[i].title}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            $(carousel).append(personCarousel);
+        }
+
+        $("#carouselExampleControls .carousel-inner .carousel-item").eq(0).addClass("active");
 
         const leftNavigationCarousel = 
         `<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -36,12 +40,11 @@ $(document).ready(function() {
             <span class="sr-only">Next</span>
         </a>`;
 
-        $("#carouselExampleControls").removeClass("loader");
-        $(carouselPerson1).html(contentPerson1);
-        $(carouselPerson2).html(contentPerson2);
         $("#carouselExampleControls").append(leftNavigationCarousel);
         $("#carouselExampleControls").append(rightNavigationCarousel);
     });
 
-    
+    //Make video cards dynamic
+    $.get("https://smileschool-api.hbtn.info/latest-videos", function(data) {    
+    });
 });
