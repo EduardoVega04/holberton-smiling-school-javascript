@@ -110,4 +110,72 @@ $(document).ready(function() {
 
         $("#tutorial__carousel").append(letfNavigationTutorials, rightNavigationTutorials);
     });
+
+    //Make latest videos section dynamic. Each deck in carousel has up to 4 cards
+    $.get("https://smileschool-api.hbtn.info/latest-videos", function(data) {
+        let carouselVideos = $("#Latest-videos__carouse .carousel-inner");
+        let deckFourVideos = 
+        `<div class="carousel-item">
+            <div class="row d-md-flex justify-content-center"></div>
+        </div>`;
+
+        $("#Latest-videos__carouse").removeClass("loader");
+
+        for(let i = 0; i < data.length; i++)
+        {
+            if(i % 4 == 0)
+                $(carouselVideos).append(deckFourVideos);
+
+            let currentVideoDeck = $("#Latest-videos__carouse .row.d-md-flex.justify-content-center").last();
+            let videoCard = 
+            `<div class="card-deck col-md-6 col-xl-3">
+                <div class="card mb-2">
+                    <div class="grid">
+                        <img class="card-img-top grid-area" src="${data[i].thumb_url}" alt="Thumbnail 1" width="255" height="154">
+                        <img class="play-img grid-area" src="images/play.png" alt="Play" width="64" height="64">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${data[i].title}</h5>
+                        <p class="card-text">${data[i]["sub-title"]}</p>
+                        <div class="card-text">
+                            <img class="rounded-circle img-fluid" width="30" height="30" src="${data[i].author_pic_url}" alt="${data[i].author} profile picture">
+                            <span class="team_word"><strong>${data[i].author}</strong></span> <br><br>
+                        </div>
+                        <div class="card-text">
+                            <div class="row dflex justify-content-between">
+                                <div class="col-8"></div>
+                                <div class="col-4 text-right align-self-center">
+                                    <span class="team_word">${data[i].duration}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            $(currentVideoDeck).append(videoCard);
+
+            for(let j = 0; j < data[i].star; j++)
+                $("#Latest-videos__carouse .col-8").last().append("<img class='img-fluid star-size' src='images/star_on.png' alt='rate start on'>");
+
+            for(let j = 5; j > data[i].star; j--)
+                $("#Latest-videos__carouse .col-8").last().append("<img class='img-fluid star-size' src='images/star_off.png' alt='rate start off'>");
+        }
+
+        $("#Latest-videos__carouse .carousel-inner .carousel-item").first().addClass("active");
+
+        let leftNavigationVideos = 
+        `<a class="carousel-control-prev" href="#Latest-videos__carouse" role="button" data-slide="prev">
+            <img src="images/arrow_black_left.png" width="30" height="60" alt="tutorial arrow left">
+            <span class="sr-only">Previous</span>
+        </a>`;
+
+        let rightNavigationVideos = 
+        `<a class="carousel-control-next" href="#Latest-videos__carouse" role="button" data-slide="next">
+            <img src="images/arrow_black_right.png" width="30" height="60" alt="tutorial arrow right">
+            <span class="sr-only">Next</span>
+        </a>`;
+
+        $("#Latest-videos__carouse").append(leftNavigationVideos, rightNavigationVideos);        
+    });
 });
