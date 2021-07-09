@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    //Make carousel dynamic
+    //Make testimonial quotes carousel dynamic
     $.get("https://smileschool-api.hbtn.info/quotes", function(data) {
         let carousel = $("#carouselExampleControls .carousel-inner");
 
@@ -26,7 +26,7 @@ $(document).ready(function() {
             $(carousel).append(personCarousel);
         }
 
-        $("#carouselExampleControls .carousel-inner .carousel-item").eq(0).addClass("active");
+        $("#carouselExampleControls .carousel-inner .carousel-item").first().addClass("active");
 
         const leftNavigationCarousel = 
         `<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -40,11 +40,74 @@ $(document).ready(function() {
             <span class="sr-only">Next</span>
         </a>`;
 
-        $("#carouselExampleControls").append(leftNavigationCarousel);
-        $("#carouselExampleControls").append(rightNavigationCarousel);
+        $("#carouselExampleControls").append(leftNavigationCarousel, rightNavigationCarousel);
     });
 
-    //Make video cards dynamic
-    $.get("https://smileschool-api.hbtn.info/latest-videos", function(data) {    
+    //Make most popular tutorials dynamic. Each deck in carousel has up to 4 cards
+    $.get("https://smileschool-api.hbtn.info/popular-tutorials", function(data) {
+        let carouselCards = $("#tutorial__carousel .carousel-inner");
+        let deckFourCards = 
+        `<div class="carousel-item">
+            <div class="row d-md-flex justify-content-center"></div>
+        </div>`;
+
+        $("#tutorial__carousel").removeClass("loader");
+
+        for(let i = 0; i < data.length; i++)
+        {
+            if(i % 4 == 0)
+                $(carouselCards).append(deckFourCards);
+
+            let currentDeck = $("#tutorial__carousel .row.d-md-flex.justify-content-center").last();
+            let card = 
+            `<div class="card-deck col-md-6 col-xl-3">
+                <div class="card mb-2">
+                    <div class="grid">
+                        <img class="card-img-top grid-area" src="${data[i].thumb_url}" alt="Thumbnail 1" width="255" height="154">
+                        <img class="play-img grid-area" src="images/play.png" alt="Play" width="64" height="64">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${data[i].title}</h5>
+                        <p class="card-text">${data[i]["sub-title"]}</p>
+                        <div class="card-text">
+                            <img class="rounded-circle img-fluid" width="30" height="30" src="${data[i].author_pic_url}" alt="${data[i].author} profile picture">
+                            <span class="team_word"><strong>${data[i].author}</strong></span> <br><br>
+                        </div>
+                        <div class="card-text">
+                            <div class="row dflex justify-content-between">
+                                <div class="col-8"></div>
+                                <div class="col-4 text-right align-self-center">
+                                    <span class="team_word">${data[i].duration}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            $(currentDeck).append(card);
+
+            for(let j = 0; j < data[i].star; j++)
+                $("#tutorial__carousel .col-8").last().append("<img class='img-fluid star-size' src='images/star_on.png' alt='rate start on'>");
+
+            for(let j = 5; j > data[i].star; j--)
+                $("#tutorial__carousel .col-8").last().append("<img class='img-fluid star-size' src='images/star_off.png' alt='rate start off'>");
+        }
+
+        $("#tutorial__carousel .carousel-inner .carousel-item").first().addClass("active");
+
+        let letfNavigationTutorials = 
+        `<a class="carousel-control-prev" href="#tutorial__carousel" role="button" data-slide="prev">
+            <img src="images/arrow_black_left.png" width="30" height="60" alt="tutorial arrow left">
+            <span class="sr-only">Previous</span>
+        </a>`;
+
+        let rightNavigationTutorials = 
+        `<a class="carousel-control-next" href="#tutorial__carousel" role="button" data-slide="next">
+            <img src="images/arrow_black_right.png" width="30" height="60" alt="tutorial arrow right">
+            <span class="sr-only">Next</span>
+        </a>`;
+
+        $("#tutorial__carousel").append(letfNavigationTutorials, rightNavigationTutorials);
     });
 });
