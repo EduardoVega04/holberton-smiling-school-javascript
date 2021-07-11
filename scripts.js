@@ -178,4 +178,132 @@ $(document).ready(function() {
 
         $("#Latest-videos__carouse").append(leftNavigationVideos, rightNavigationVideos);        
     });
+
+    //Make courses page dynamic
+    function showSearchResults(searchWords, topicLevel, sortingType){
+        $.get("https://smileschool-api.hbtn.info/courses", function(data) {
+
+            if(searchWords === "")
+                $("input").val(data.q);
+            
+            $(".rounded-top").first().text(topicLevel);
+            $(".rounded-top").last().text(sortingType);
+    
+            if($(".dropdown-menu").first().children().length == 0)
+            {
+                for(let i = 0; i < data.topics.length; i++)
+                {
+                    let topicName = data.topics[i].charAt(0).toUpperCase() + data.topics[i].slice(1);
+                    let itemTopic = `<a class="dropdown-item" href="#">${topicName}</a>`;
+                    $(".dropdown-menu").first().append(itemTopic);
+                }
+            }
+    
+            if($(".dropdown-menu").last().children().length == 0)
+            {
+                for(let i = 0; i < data.sorts.length; i++)
+                {
+                    let sortType = data.sorts[i].charAt(0).toUpperCase() + data.sorts[i].slice(1).replace('_',' ');
+                    let itemSort = `<a class="dropdown-item" href="#">${sortType}</a>`;
+                    $(".dropdown-menu").last().append(itemSort);
+                }
+            }
+
+            let listResults = [];
+
+            if(searchWords === "")
+                listResults = data.courses;
+            else
+            {
+                listResults = data.courses.filter(keywd => keywd.keywords.includes(searchWords));
+            }
+
+            if(topicLevel !== "All")
+            {
+                listResults = listResults.filter(course => course.topic === topicLevel);
+            }
+
+            if(sortingType === "Most popular")
+            {
+                listResults = listResults.sort(function(a, b) {
+                    if(a.star > b.star)
+                        return -1;
+                });
+            }
+            else if (sortingType === "Most recent")
+            {
+                listResults = listResults.sort(function(a, b) {
+                    if(a.published_at < b.published_at)
+                        return -1;
+                });
+            }
+            else 
+            {
+                listResults = listResults.sort(function(a, b) {
+                    if(a.views > b.views)
+                        return -1;
+                });
+            }
+
+            $(".p-5 .container.opacity-35").text(listResults.length + " videos");
+            $(".p-5 .row").empty();
+            $(".p-5").removeClass("loader");
+
+            for(let i = 0; i < listResults.length; i++)
+            {
+                let resultsSearch =
+                `<div class="card-deck col-md-6 col-xl-3">
+                    <div class="card mb-2">
+                        <div class="grid">
+                            <img class="card-img-top grid-area" src="${listResults[i].thumb_url}" alt="Thumbnail 1" width="255" height="154">
+                            <img class="play-img grid-area" src="images/play.png" alt="Play" width="64" height="64">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${listResults[i].title}</h5>
+                            <p class="card-text">${listResults[i]["sub-title"]}</p>
+                            <div class="card-text">
+                                <img class="rounded-circle img-fluid" width="30" height="30" src="${listResults[i].author_pic_url}" alt="${listResults[i].author} profile picture">
+                                <span class="team_word"><strong>${listResults[i].author}</strong></span> <br><br>
+                            </div>
+                            <div class="card-text">
+                                <div class="row dflex justify-content-between">
+                                    <div class="col-8"></div>
+                                    <div class="col-4 text-right align-self-center">
+                                        <span class="team_word">${listResults[i].duration}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+                $(".p-5 .row").first().append(resultsSearch);
+
+                for(let j = 0; j < data.courses[i].star; j++)
+                    $(".col-8").last().append("<img class='img-fluid star-size' src='images/star_on.png' alt='rate start on'>");
+
+                for(let j = 5; j > data.courses[i].star; j--)
+                    $(".col-8").last().append("<img class='img-fluid star-size' src='images/star_off.png' alt='rate start off'>");
+                }
+        });
+    }
+    
+    let searchParam = ["", "All", "Most popular"];
+
+    showSearchResults(searchParam[0], searchParam[1], searchParam[2]);
+
+    $("input").change(function() {
+        searchParam[0] = $("input").val();
+        showSearchResults(searchParam[0], searchParam[1], searchParam[2]);
+    });
+
+    $(".dropdown .dropdown-menu").first().on("click", "a", function() {
+        searchParam[1] = $(this).text();
+        showSearchResults(searchParam[0], searchParam[1], searchParam[2]);
+    });
+
+    $(".dropdown .dropdown-menu").last().on("click", "a", function() {
+        searchParam[2] = $(this).text();
+        showSearchResults(searchParam[0], searchParam[1], searchParam[2]);
+    });
 });
