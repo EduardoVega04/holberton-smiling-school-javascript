@@ -181,6 +181,9 @@ $(document).ready(function() {
 
     //Make courses page dynamic
     function showSearchResults(searchWords, topicLevel, sortingType){
+        $(".p-5 .row").empty();
+        $(".p-5").addClass("loader");
+
         $.get("https://smileschool-api.hbtn.info/courses", function(data) {
 
             if(searchWords === "")
@@ -214,14 +217,10 @@ $(document).ready(function() {
             if(searchWords === "")
                 listResults = data.courses;
             else
-            {
-                listResults = data.courses.filter(keywd => keywd.keywords.includes(searchWords));
-            }
+                listResults = data.courses.filter(keywd => keywd.keywords.includes(searchWords.charAt(0).toUpperCase() + searchWords.slice(1).toLowerCase()));
 
             if(topicLevel !== "All")
-            {
                 listResults = listResults.filter(course => course.topic === topicLevel);
-            }
 
             if(sortingType === "Most popular")
             {
@@ -245,9 +244,8 @@ $(document).ready(function() {
                 });
             }
 
-            $(".p-5 .container.opacity-35").text(listResults.length + " videos");
-            $(".p-5 .row").empty();
             $(".p-5").removeClass("loader");
+            $(".p-5 .container.opacity-35").text(listResults.length + " videos");
 
             for(let i = 0; i < listResults.length; i++)
             {
