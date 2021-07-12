@@ -277,10 +277,10 @@ $(document).ready(function() {
 
                 $(".p-5 .row").first().append(resultsSearch);
 
-                for(let j = 0; j < data.courses[i].star; j++)
+                for(let j = 0; j < listResults[i].star; j++)
                     $(".col-8").last().append("<img class='img-fluid star-size' src='images/star_on.png' alt='rate start on'>");
 
-                for(let j = 5; j > data.courses[i].star; j--)
+                for(let j = 5; j > listResults[i].star; j--)
                     $(".col-8").last().append("<img class='img-fluid star-size' src='images/star_off.png' alt='rate start off'>");
                 }
         });
