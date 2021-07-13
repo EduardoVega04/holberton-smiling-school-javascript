@@ -152,10 +152,18 @@
   <main>
     <!-- Carousel of quotes -->
     <section class="testimonial text-center text-white">
-      <div id="carouselExampleControls" class="carousel slide loader" data-ride="carousel">
-        <div class="carousel-inner">
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner loader">
           <!-- Content added dynamically with jQuery -->
         </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+          <img class="" width="30" height="60" src="images/arrow_white_left.png" alt="left arrow">
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+          <img width="30" height="60" src="images/arrow_white_right.png" alt="right arrow">
+          <span class="sr-only">Next</span>
+        </a>
       </div>
     </section>
 
@@ -1042,9 +1050,9 @@
     </div>
   </footer>
 
-  <script src="scripts.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="scripts.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
